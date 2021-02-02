@@ -227,18 +227,6 @@ sns.kdeplot(mad, ax=ax, label='Not shared with other roots', color='red'  , shad
 fig.tight_layout()
 fig.savefig('yeah.pdf', dpi=300)
 
-
-
-
-
-
-
-
-
-
-
-
-
 tmp    = []
 [tmp.extend(value) for value in ranger_supported_pairs.values()]
 ranger = collections.Counter(tmp)
@@ -444,41 +432,3 @@ fig.tight_layout()
 fig.savefig('../yeah.pdf', dpi=300,)
 fig.clear()
 plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
