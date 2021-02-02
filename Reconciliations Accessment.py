@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import multiprocessing
 import pickle as pkl
 import plotly
@@ -14,33 +11,21 @@ import subprocess
 import os
 import jdc
 
-plotly_accession = open('/Users/thiberio/plotly_accession').read().split()
+plotly_accession = open('/Users/plotly_accession').read().split()
 ptl.sign_in(plotly_accession[0], plotly_accession[1])
 
 get_ipython().run_line_magic('run', 'base_functions.ipynb')
 os.chdir('/work/Alphas_and_Cyanos')
 
-
-# In[2]:
-
-
 #os.chdir('/work/jupyter_notebooks/index_hgt')
 #%run base_functions.ipynb
 #os.chdir('/work/Alphas_and_Cyanos')
-
-
-# In[3]:
-
 
 parse_transfers = aggregate(
     reference_tree='rooted_partitions-with_named_branches.treefile',
     gene_tree_folder='/work/Alphas_and_Cyanos/ranger_input_trees-no_long_branches/',
     aggregate_folder='/work/Alphas_and_Cyanos/aggregated/mad_roots-stricter_branch_lengths/',
     reconciliation_folder='.')
-
-
-# In[4]:
-
 
 with cd('reconciliations/mad_roots-stricter_branch_lengths'):
     pool    = multiprocessing.Pool(processes=15)
@@ -57,14 +42,7 @@ out = open('aggregated/mad_transfers-test.pkl', 'wb')
 pkl.dump(transfers, out)
 out.close()
 
-
-# In[5]:
-
-
 get_ipython().run_line_magic('pinfo', 'parse_transfers.species_tree.write')
-
-
-# In[6]:
 
 
 out = open('aggregated/maxtic.constrains-test', 'w')
@@ -87,10 +65,6 @@ maxtic = pd.read_table('aggregated/maxtic.constrains-test_MT_output_partial_orde
                        names=['donor', 'recipient', 'weight', 'no_idea'],
                        sep=' ')
 
-
-# In[7]:
-
-
 maxtic_compatible_transfers = {}
 for group, (transfer_data, gene_tree) in transfers.items():
     tmp_transfers = []
@@ -101,23 +75,14 @@ for group, (transfer_data, gene_tree) in transfers.items():
         maxtic_compatible_transfers[group] = [tmp_transfers, gene_tree]
 
 
-# In[8]:
-
-
 pool = multiprocessing.Pool(processes=18)
 results = pool.map(parse_transfers.assess_dtl_dist,
                    list(maxtic_compatible_transfers.items()))
 
 
-# In[9]:
-
-
 donor_dtl_distances = {}
 for element in results:
     donor_dtl_distances.update(element)
-
-
-# In[10]:
 
 
 reference_tree         = ete3.Tree('rooted_partitions-with_named_branches.treefile', format=1)
@@ -149,23 +114,11 @@ for group, (transfer_data, gene_tree) in maxtic_compatible_transfers.items():
             donor_complexity_ratio[transfer['donor']] = tmp_dist/len(donor_branch)
 
 
-# In[11]:
-
-
 maxtic.loc[
             (maxtic.donor==maxtic_compatible_transfers[group][0][position]['donor']) &
-            (maxtic.recipient==maxtic_compatible_transfers[group][0][position]['recipient']),
-].shape[0]
-
-
-# In[ ]:
-
+            (maxtic.recipient==maxtic_compatible_transfers[group][0][position]['recipient']),].shape[0]
 
 maxtic.head()
-
-
-# In[ ]:
-
 
 tracer = {'color':[], 'x':[], 'y':[], 'text':[], 'marker_size':[]}
 for group in donor_dtl_distances.keys():
@@ -272,4 +225,3 @@ layout    = go.Layout(
     sliders=[slider])
 fig       = go.Figure(data=bins, layout=layout)
 plot      = plotly.offline.plot(fig, filename='./yeah.html', auto_open=False)
-
