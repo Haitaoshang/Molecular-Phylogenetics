@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 import ete3
 import re
 import itertools
@@ -23,15 +20,9 @@ ncbi = ete3.NCBITaxa()
 get_ipython().run_line_magic('cd', '/work/eggNOG/')
 
 
-# In[ ]:
-
-
 sampled_genomes = pd.read_csv('../genomes.tab',
                               sep='\t',
                               index_col=0)
-
-
-# In[ ]:
 
 
 lineages = pd.DataFrame()
@@ -46,21 +37,9 @@ lineages = lineages.reindex(columns=['class', 'family',  'genus', 'phylum',
 lineages = lineages.query('superkingdom == 2').copy()
 
 
-# In[ ]:
-
-
 working_groups  = pd.read_parquet('working_eggNOG_groups.parquet')
 working_trees   = pd.read_parquet('working_eggNOG_trees.parquet' )
 eggNOG_taxonomy = pd.read_parquet('eggNOG_taxonomy.parquet'      )
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 def get_pairwise_distances(group_id):
@@ -104,10 +83,7 @@ def get_pairwise_distances(group_id):
                               )
     return(dist_matrix)
 
-
-# In[ ]:
-
-
+  
 def create_taxa_graph(dist_matrix, phyla):
     triu_indices       = np.triu_indices_from(dist_matrix, k=1)
     
@@ -126,9 +102,6 @@ def create_taxa_graph(dist_matrix, phyla):
                                 weights =True)
     
     return(edge_list, graph)
-
-
-# In[ ]:
 
 
 def cles(lessers, greaters):
@@ -158,9 +131,6 @@ def cles(lessers, greaters):
         numerator += lesser_index  # the count less than the greater
     denominator = len(lessers) * len(greaters)
     return float(numerator) / denominator
-
-
-# In[ ]:
 
 
 def assess_cluster(reference_phylum, minimal_freq_phyla, cluster_edges, cluster_nodes):
@@ -221,9 +191,6 @@ def assess_cluster(reference_phylum, minimal_freq_phyla, cluster_edges, cluster_
                                                        index=['phylum', 'median', 'distances']),
                                              ignore_index=True)
     return(cluster_dists)
-
-
-# In[ ]:
 
 
 def get_phyla_evol_distances(group_id):    
@@ -336,20 +303,7 @@ def get_phyla_evol_distances(group_id):
     return(group_id, cluster_evol_relations)
 
 
-# In[ ]:
-
-
-# %%time
-# get_phyla_evol_distances('COG0499')
-
-
-# In[ ]:
-
-
 get_ipython().run_cell_magic('time', '', 'pool    = multiprocessing.Pool(processes=10, maxtasksperchild=5)\nresults = pool.map_async(get_phyla_evol_distances, working_groups.group_id.values)\npool.close()\npool.join()')
-
-
-# In[ ]:
 
 
 with open('all_results.pkl', 'wb') as out:
