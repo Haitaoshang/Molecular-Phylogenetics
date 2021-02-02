@@ -134,20 +134,18 @@ def cles(lessers, greaters):
 
 
 def assess_cluster(reference_phylum, minimal_freq_phyla, cluster_edges, cluster_nodes):
-
-    #
     # store distances between reference phylum and others
     cluster_dists = pd.DataFrame(columns=['phylum', 'median', 'distances'])
 
-    #
     # traverse all phylum pairs containing the reference phylum
     for phylum in minimal_freq_phyla:
         if phylum == reference_phylum:
             continue
 
-        inter_phyla = cluster_edges.loc[((cluster_edges.phylum1==reference_phylum) & (cluster_edges.phylum2==phylum)) |                                        ((cluster_edges.phylum2==reference_phylum) & (cluster_edges.phylum1==phylum))]
+        inter_phyla = cluster_edges.loc[((cluster_edges.phylum1==reference_phylum) & (cluster_edges.phylum2==phylum)) |                                        
+                                        ((cluster_edges.phylum2==reference_phylum) & (cluster_edges.phylum1==phylum))]
         
-        #
+     
         # create a quadratic matrix of pairwise distances between phyla
         #   rows and columns must be unique pairs of sequence names
         indices     = np.unique(inter_phyla[['sequence1', 'sequence2']])
@@ -155,7 +153,6 @@ def assess_cluster(reference_phylum, minimal_freq_phyla, cluster_edges, cluster_
                                    columns=indices,
                                    data   =0.0)
         
-        #
         # add distances between sequences from the edge list to the quadratic matrix
         #   as the matrix is quadratic, add values to both directions
         indexer     = adjacencies.index.get_indexer
@@ -295,7 +292,7 @@ def get_phyla_evol_distances(group_id):
                 # both cles lines below should work identically... I am leaving the above because it is the one I
                 #   used in the paper, no real reason...
                 effect_size = hypothesis.statistic / (len(cluster_dists.iloc[0, 2])*len(cluster_dists.iloc[1, 2]))
-#                 effect_size = 1-cles(cluster_dists.iloc[0, 2], cluster_dists.iloc[1, 2])
+                effect_size = 1-cles(cluster_dists.iloc[0, 2], cluster_dists.iloc[1, 2])
 
                 if hypothesis.pvalue < 0.01 and effect_size < 0.2:
                     cluster_evol_relations[cluster_num][ref_phylum]['significant'] = True
@@ -309,4 +306,3 @@ get_ipython().run_cell_magic('time', '', 'pool    = multiprocessing.Pool(process
 with open('all_results.pkl', 'wb') as out:
     pkl.dump(results.get(), out)
 del(results)
-
