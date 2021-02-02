@@ -8,7 +8,6 @@ import pandas as pd
 import multiprocessing
 from itertools import product
 
-
 #
 # initial definitions
 class cd:
@@ -32,43 +31,6 @@ num_replicates      = 100
 sequence_length     = 1000
 num_threads         = 3
 num_rate_categories = 12
-
-indelible_conf = '''\
-/////////////////////////////////////////////////////////////////////////////////////
-//                                                                                 //
-//  INDELible V1.03 control file - site-rate project                               //
-//                                                                                 //
-//      Automaticaly generated, more information:                                  //
-//          github.com/lthiberiol/fournierLab/tree/master/site_rates               //
-//                                                                                 //
-/////////////////////////////////////////////////////////////////////////////////////
-
-[TYPE]  AMINOACID 1
-
-[SETTINGS]
-    [randomseed]   12345
-
-[MODEL] model1  [submodel]  LG         //   LG
-                [rates]     0 1.3 20    //   pinv=0, alpha=1.3, discrete gamma categories=20
-                [statefreq]
-                    0.083   0.078   0.035   0.059   // list of 20 numbers
-                    0.006   0.031   0.082   0.080   // A R N D C
-                    0.018   0.063   0.070   0.078   // Q E G H I
-                    0.025   0.025   0.046   0.050   // L K M F P
-                    0.054   0.008   0.025   0.084   // S T W Y V
-
-[TREE] T1  {t1}
-[TREE] T2  {t2}
-[TREE] T3  {t3}
-
-//[PARTITIONS] partition1 [T1 model1 {length}]   // tree T1, model model1, root length 1000
-[PARTITIONS] partition2 [T2 model1 {length}]   // tree T2, model model1, root length 1000
-[PARTITIONS] partition3 [T3 model1 {length}]   // tree T3, model model1, root length 1000
-
-[EVOLVE]    //partition1  {num_replicates}   {t1_name}
-            partition2  {num_replicates}   {t2_name}
-            partition3  {num_replicates}   {t3_name}
-'''
 
 partition_name = 'base_tree'
 trees                 = {}
