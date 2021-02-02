@@ -1,15 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-#################################################################################
-#                                                                               #
-# Script to retrieve and add taxonomic annotation to newick trees in a          #
-#     FigTree-happy nexus format!                                               #
-#                                                                               #
-#                                         Thiberio Rangel, lthiberiol@gmail.com #
-#                                                                               #
-#################################################################################
-
 import ete3
 import re
 import os
